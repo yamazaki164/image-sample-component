@@ -1,0 +1,13 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>Welcome to {{ title }}!</h1>
+
+</div>
+
+<input type="file" id="file" value="" (change)="loadFile($event)" />
+
+<ng-container *ngIf="canShowImage()">
+  <div [style.width.px]="400">
+    <img [src]="image.src" [style.width]="'100%'" [style.height]="'auto'" />
+  </div>
+</ng-container>
