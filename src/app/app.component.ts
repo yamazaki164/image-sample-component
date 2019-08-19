@@ -19,9 +19,9 @@ export class AppComponent {
   }
 
   canShowImage(): boolean {
-    return this.isLoad;
+    return this.isLoad && !this.isError;
   }
-
+  
   loadFile(event: Event) {
     const elm = event.target as HTMLInputElement;
     if (elm.files.length == 0) return;
@@ -30,17 +30,27 @@ export class AppComponent {
     if (!this.validate(file)) return;
 
     this.readFile(file).then(res => {
-      this.image.src = res.toString();
-      this.image.onload = () => {
-        this.isLoad = true;
-        this.isError = false;
-      }
+      this.readImage(res);
     }).catch(error => {
       this.isLoad = false;
       this.isError = true;
 
       console.log(error)
     });
+  }
+
+  private readImage(buffer: string | ArrayBuffer) {
+    this.image.src = buffer.toString();
+
+    this.image.onload = () => {
+      this.isLoad = true;
+      this.isError = false;
+    }
+
+    this.image.onerror = () => {
+      this.isLoad = false;
+      this.isError = true;
+    }
   }
 
   private validate(file: File): boolean {

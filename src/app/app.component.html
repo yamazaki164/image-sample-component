@@ -11,3 +11,8 @@
     <img [src]="image.src" [style.width]="'100%'" [style.height]="'auto'" />
   </div>
 </ng-container>
+<ng-container *ngIf="isError">
+  <div>
+    <p>load error</p>
+  </div>
+</ng-container>
