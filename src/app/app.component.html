@@ -1,7 +1,6 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>Welcome to {{ title }}!</h1>
-
 </div>
 
 <input type="file" id="file" value="" (change)="loadFile($event)" />
@@ -14,5 +13,19 @@
 <ng-container *ngIf="isError">
   <div>
     <p>load error</p>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="canShowImage()">
+  <div>
+    <button type="button" (click)="rotate(-90)">左90°回転</button>
+
+    <button type="button" (click)="rotate(90)">右90°回転</button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isLoad2">
+  <div [style.width.px]="400">
+    <img [src]="image2.src" [style.width]="'100%'" [style.height]="'auto'" />
   </div>
 </ng-container>
