@@ -10,9 +10,9 @@ export class AppComponent {
 
   image: HTMLImageElement;
   image2: HTMLImageElement;
-  isLoad: boolean = false;
-  isError: boolean = false;
-  isLoad2: boolean = false;
+  isLoad = false;
+  isError = false;
+  isLoad2 = false;
 
   constructor() {
     this.image = new Image();
@@ -22,40 +22,46 @@ export class AppComponent {
   canShowImage(): boolean {
     return this.isLoad && !this.isError;
   }
-  
+
   loadFile(event: Event) {
     const elm = event.target as HTMLInputElement;
-    if (elm.files.length == 0) return;
+    if (elm.files.length === 0) {
+      return;
+    }
     const file = elm.files[0];
 
-    if (!this.validate(file)) return;
+    if (!this.validate(file)) {
+      return;
+    }
 
-    this.readFile(file).then(res => {
-      this.readImage(res);
-    }).catch(error => {
-      this.isLoad = false;
-      this.isError = true;
+    this.readFile(file)
+      .then(res => {
+        this.readImage(res);
+      })
+      .catch(error => {
+        this.isLoad = false;
+        this.isError = true;
 
-      console.log(error)
-    });
+        console.log(error);
+      });
   }
 
   rotate(angle: number) {
     const image = this.image2;
-    this.image2.src = this.rotateImage(angle, image);
+    this.image2.src = this.rotateImage(image, angle);
   }
 
-  private rotateImage(angle: number, image: HTMLImageElement): string {
+  private rotateImage(image: HTMLImageElement, angle: number): string {
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext("2d");
+    const context = canvas.getContext('2d');
 
     canvas.width = image.height;
     canvas.height = image.width;
 
-    context.translate(image.height/2, image.width/2);
-    context.rotate(angle * Math.PI / 180);
+    context.translate(image.height * 0.5, image.width * 0.5);
+    context.rotate((angle * Math.PI) / 180);
 
-    context.drawImage(image, -image.width/2, -image.height/2);
+    context.drawImage(image, -image.width * 0.5, -image.height * 0.5);
 
     return canvas.toDataURL();
   }
@@ -70,18 +76,18 @@ export class AppComponent {
       this.image2.src = buffer.toString();
       this.image2.onload = () => {
         this.isLoad2 = true;
-      }
-    }
+      };
+    };
 
     this.image.onerror = () => {
       this.isLoad = false;
       this.isError = true;
-    }
+    };
   }
 
   private validate(file: File): boolean {
-    const allowedExtension = ["jpeg", "png"];
-    return (allowedExtension.some(item => file.type.includes(item)));
+    const allowedExtension = ['jpeg', 'png'];
+    return allowedExtension.some(item => file.type.includes(item));
   }
 
   private readFile(file: File): Promise<string | ArrayBuffer> {
@@ -90,13 +96,13 @@ export class AppComponent {
 
       reader.onload = () => {
         resolve(reader.result);
-      }
+      };
       reader.onerror = error => {
         reject(error);
-      }
+      };
       reader.onabort = error => {
         reject(error);
-      }
+      };
 
       reader.readAsDataURL(file);
     });
